@@ -1,0 +1,42 @@
+.flex-btn{
+    display: flex;
+    justify-content: center;
+}
+/*----------about section----------*/
+.chef{
+    padding-left: 4%;
+}
+.story{
+    background-image: url('../image/about_bg.jpg');
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    line-height: 1.5;
+
+}
+.story p{
+    padding-bottom: 2rem;
+    color:gray;
+}
+
+/*----------media query----------*/
+.chef .box{
+    line-height: 1.5;
+    text-align: center;
+    box-shadow:none;
+}
+.chef .box .img{
+    width: 70%;
+    margin-bottom: -2rem;
+}
+.chef .box p{
+    font-size: 1.3rem;
+    color:#666;
+}
