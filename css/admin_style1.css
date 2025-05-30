@@ -1,23 +1,12 @@
-.btn {
-    text-align: center;
-}
 
-.form-container .register .img-box img {
-    width: 100%;
-}
 
-.form-container .image {
-    width: 100%;
-    height: 30rem;
-}
+
 
 .post-editor .form-container form {
     width: 80rem;
 }
 
-.post-editor input[type="submit"] {
-    width: 49%;
-}
+
 
 .message-container .box-container .box {
     line-height: 2;

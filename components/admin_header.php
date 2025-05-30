@@ -55,8 +55,6 @@
         <div class="social-links">
             <i class="bx bxl-facebook"></i>
             <i class="bx bxl-instagram-alt"></i>
-            <i class="bx bxl-linkedin"></i>
-            <i class="bx bxl-twitter"></i>
             <i class="bx bxl-pinterest-alt"></i>
         </div>
     </div>
