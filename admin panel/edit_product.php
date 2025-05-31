@@ -9,8 +9,19 @@ if (isset($_COOKIE['seller_id'])) {
     exit;
 }
 
+if (isset($_POST['go_back'])) {
+    header('Location: view_product.php');
+    exit;
+}
 
-if (isset($_POST['publish'])) {
+if (isset($_POST['go_back'])) {
+    header('Location: view_product.php');
+    exit;
+}
+
+
+if (isset($_POST['update'])) {
+
     $product_id = $_POST['product_id'];
     $product_id = filter_var($product_id, FILTER_SANITIZE_STRING);
 
@@ -27,7 +38,9 @@ if (isset($_POST['publish'])) {
     $stock = filter_var($stock, FILTER_SANITIZE_STRING);
 
     $status = $_POST['status'];
-    $status = filter_var($status, FILTER_SANITIZE_STRING);
+    $status = filter_var($status, FILTER_SANITIZE_STRING);  
+
+
 
     $update_product = $conn->prepare("UPDATE `products` SET name=?, price=?, product_detail=?, stock=?, status=? WHERE id=?"); // Correction de la requête SQL
     $update_product->execute([$name, $price, $description, $stock, $status, $product_id]);
@@ -41,34 +54,73 @@ if (isset($_POST['publish'])) {
     $image_tmp_name = $_FILES['image']['tmp_name']; 
     $image_folder = '../uploaded_files/' . $image;
 
-    $select_image = $conn->prepare("SELECT * FROM `products` WHERE image = ? AND seller_id = ?"); // Correction de la requête SQL
+    $select_image = $conn->prepare("SELECT * FROM `products` WHERE image = ? AND seller_id = ?"); 
     $select_image->execute([$image, $seller_id]);
     
     if (!empty($image)) {
-        if ($image_size > 2000000) { // Correction de la condition
+        if ($image_size > 2000000) {
             $warning_msg[] = 'Image size is too large';
-        } elseif ($select_image->rowCount() > 0) { // Correction de la condition
+        } elseif ($select_image->rowCount() > 0) { 
             $warning_msg[] = 'Please rename your image';
         } else {
-            $update_image = $conn->prepare("UPDATE products SET image = ? WHERE id = ?"); // Correction de la requête SQL
+            $update_image = $conn->prepare("UPDATE products SET image = ? WHERE id = ?"); 
             $update_image->execute([$image, $product_id]); 
-            move_uploaded_file($image_tmp_name, $image_folder); // Correction de la fonction move_uploaded_file
+            move_uploaded_file($image_tmp_name, $image_folder); 
 
-            if ($old_image != $image && $old_image != '') { // Correction de la condition
-                unlink('../uploaded_files/' . $old_image); // Correction du chemin et de la variable
+            if ($old_image != $image && $old_image != '') { 
+                unlink('../uploaded_files/' . $old_image);
             }
             $success_msg[] = 'Image updated';
         }
     }
 }
+if (isset($_POST['delete_image'])){
+        $empty_image='';
+
+        $product_id=$_POST['product_id'];
+        $product_id=filter_var($product_id,FILTER_SANITIZE_STRING);
+
+        $delete_image=$conn->prepare("SELECT * FROM `products` WHERE id=?");
+        $delete_image->execute([$product_id]); // Correction ici : `$delete_image->$execute` devient `$delete_image->execute`
+        $fetch_delete_image=$delete_image->fetch(PDO::FETCH_ASSOC);
+
+        if ($fetch_delete_image['image']!=''){
+            unlink('../uploaded_files/'.$fetch_delete_image['image']);
+        }
+        $unset_image=$conn ->prepare("UPDATE `products` SET image=? WHERE id=?");
+        $unset_image->execute([$empty_image,$product_id]);
+        $success_msg[]='image deleted succefully';
+    }
+    //delete product
+    if (isset($_POST['delete_product'])) {
+    $product_id = $_POST['product_id'];
+    $product_id = filter_var($product_id, FILTER_SANITIZE_STRING);
+    
+    $delete_image = $conn->prepare("SELECT * FROM `products` WHERE id = ?");
+    $delete_image->execute([$product_id]);
+    $fetch_delete_image = $delete_image->fetch(PDO::FETCH_ASSOC);
+
+    if ($fetch_delete_image['image'] != '') {
+        unlink('../uloaded_files/' . $fetch_delete_image['image']);
+        
+        $delete_product = $conn->prepare("DELETE FROM `products` WHERE id = ?");
+        $delete_product->execute([$product_id]);
+        
+        $success_msg[] = 'Product deleted successfully!';
+        header('Location: view_product.php'); 
+    }
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-<head>
+<head> 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Duo lumière - Admin Dashboard Page</title>
+    <title>Candle Shop - Admin Dashboard Page</title>
     <link rel="stylesheet" type="text/css" href="../css/admin_style.css">
     <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet">
 </head>
@@ -82,8 +134,7 @@ if (isset($_POST['publish'])) {
             </div>
             <div class="box-container">
                 <?php
-                $product_id = $_GET['id'];
-                {
+                $product_id = $_GET['id'];  
                 $select_product = $conn->prepare("SELECT * FROM `products` WHERE id = ? AND seller_id = ?");
                 $select_product->execute([$product_id, $seller_id]);
 
@@ -97,7 +148,7 @@ if (isset($_POST['publish'])) {
 
                         <div class="input-fields"> 
                             <p>Product status <span>*</span></p>
-                            <select name="status">
+                            <select name="status" class="box">
                                 <option value="<?= $fetch_product['status']; ?>" selected><?= $fetch_product['status']; ?></option>
                                 <option value="active">active</option>
                                 <option value="desactive">desactive</option>
@@ -118,8 +169,7 @@ if (isset($_POST['publish'])) {
                         </div>
                         <div class="input-fields"> 
                             <p>Product Stock <span>*</span></p>
-                            <input type="number" name="stock" value="<?= $fetch_product['stock']; ?>" class="box"
-                            min="0" max="9999999999" maxlength="10">
+                            <input type="number" name="stock" value="<?= $fetch_product['stock']; ?>" class="box" min="0" max="9999999999" maxlength="10">
                         </div>
                         <div class="input-fields"> 
                             <p>Product Image<span>*</span></p>
@@ -127,38 +177,38 @@ if (isset($_POST['publish'])) {
                             <?php 
                             if ($fetch_product['image'] != '') { ?>
                                 <img src="../uploaded_files/<?= $fetch_product['image']; ?>" class="image">
-                                <div class="flex-btn">
-                                    <input type="submit" name="delete_image" class="btn" value="delete image">
-                                    <a href="view_product.php" class="btn" 
-                                    style="width: 49%; text-align: center; height: 3rem; margin-top: .7rem;">
-                                    go Back
-                                    </a>
-                                </div>
-                            <?php } ?>   
-                            <div  class="flex-btn">
-                                <input type="submit" name="update" value="update Product" class="btn">
-                                <input type="submit" name="delete_post" value="delete Product" class="btn">
-                            </div>                              
+                                <form method="post" enctype="multipart/form-data">
+                                    <div class="flex-btn">
+                                        <input type="submit" name="delete_image" class="btn" value="delete image" style="margin: 0;">
+                                        <input type="submit" name="go_back" value="Go Back" class="btn" style="margin: 0;">
+                                    </div>
+
+                                    
+                                </form>
+
+                                <?php } ?>  
+                                <div class="flex-btn" style="margin-top: 1rem;">
+                                        <input type="submit" name="update" value="update product" class="btn" style="margin: 0;">
+                                        <input type="submit" name="delete_product" value="delete product" class="btn" style="margin: 0;">
+                                </div> 
+                                                       
                         </div>
                     </form>
                 </div>
                 <?php 
-                    }
-                } else {
-                    echo '
-                        <div class="empty">
-                            <p>no product adde yet! <br><a href="add_products.php" class="btn" 
-                            style="margin-top: 1.5rem; line-height: 2;">add product</a></p>
-                        </div>
-                        ';
-                }
+                        }
+                    } else {
+                        echo '
+                            <div class="empty">
+                                <p>no product added yet! <br><a href="add_products.php" class="btn" style="margin-top: 1.5rem; line-height: 2;">add product</a></p>
+                            </div>
+                            ';
                 ?>
-                
+                    <br></br>
                     <div class="flex-btn">
-                        <a href="view_product.php" class="btn">View Product</a>
-                        <a href="add_product.php" class="btn">Add Product</a>
+                        <a href="view_posts.php" class="btn">view product</a>
                     </div>
-                 <?php } ?>
+                <?php } ?>
             </div>
         </section>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
@@ -167,3 +217,4 @@ if (isset($_POST['publish'])) {
     </div>
 </body>
 </html>
+
