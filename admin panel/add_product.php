@@ -108,12 +108,11 @@
 <body>
     <div class="main-container">
         <?php include '../components/admin_header.php'; ?>
-        <section class="post-editor">
+        <section class="form-container">
             <div class="heading">
                 <h1>add product</h1>
                 <img src="../images/separator-img.png">
             </div>
-            <div class="form-container">
                 <form action="" method="post" enctype="multipart/form-data" class="register">
                     <div class="input-field">
                         <p>product name <span>*</span></p>
@@ -140,7 +139,7 @@
                         <input type="submit" name="draft" value="save as draft" class="btn"> 
                     </div>
                 </form>
-            </div>
+            
         </section>
     </div>
 

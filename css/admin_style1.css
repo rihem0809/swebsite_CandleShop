@@ -2,103 +2,10 @@
 
 
 
-.post-editor .form-container form {
-    width: 80rem;
-}
 
 
 
-.message-container .box-container .box {
-    line-height: 2;
-    padding: 2rem;
-}
 
-.message-container .box-container .box .name {
-    text-transform: capitalize;
-    font-size: 1.5rem;
-}
 
-.message-container .box-container .box h4 {
-    text-transform: capitalize;
-    color: var(--main-color);
-}
 
-.message-container .box-container .box p {
-    margin-bottom: 1rem;
-}
 
-.order-container .box-container .box {
-    padding: 1rem;
-    position: relative;
-}
-
-.order-container .box-container .box .status {
-    position: absolute;
-    left: -4%;
-    top: 1%;
-    text-transform: uppercase;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 0.5rem;
-    box-shadow: var(--box-shadow);
-    background-color: var(--white-alpha-40);
-    display: inline-block;
-    padding: 0.5rem;
-}
-
-.order-container .box-container .box .details {
-    margin-top: 3rem;
-    line-height: 2;
-    color: gray;
-    text-transform: capitalize;
-}
-
-.order-container .box-container .box span {
-    text-transform: none;
-}
-
-.user-container .box-container {
-    margin-top: 3rem;
-}
-
-.user-container .box-container .box {
-    text-align: center;
-    padding: 2rem;
-    text-transform: capitalize;
-    line-height: 2;
-    color: gray;
-    margin-bottom: 4rem;
-}
-
-.user-container .box-container .box span {
-    text-transform: none;
-}
-
-.user-container .box-container .box img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    box-shadow: var(--box-shadow);
-    padding: 0.5rem;
-    background-color: var(--white-alpha-40);
-    margin-top: -5rem;
-    margin-bottom: 1rem;
-}
-.container{
-    padding: 4%;
-    padding-bottom: 0;
-}
-.container .box-container .img-box{
-    margin: 1rem;
-}
-.container .box-container .img-box img{
-    background-image: url('../image/shap.png');
-    background-size: contain;
-    width: 80%;
-    margin-bottom: -1.1rem;
-}
-.container .box-container .box{
-    text-align: #666;
-    font-size: 16px;
-    margin-bottom: 2rem;
-}

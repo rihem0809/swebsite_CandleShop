@@ -1,5 +1,5 @@
 <?php
-    include '../componements/connect.php';
+    include '../components/connect.php';
 
     if (isset($_COOKIE['seller_id'])) {
         $seller_id = $_COOKIE['seller_id'];
@@ -30,13 +30,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Duo lumière - Registred users page</title>
+    <title>Canle Shop - Registred users page</title>
     <link rel="stylesheet" type="text/css" href="../css/admin_style.css">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css">
 </head> 
 <body>
     <div class="main-container">
-        <?php include '../componements/admin_header.php'; ?>
+        <?php include '../components/admin_header.php'; ?>
         <section class="message-container">
             <div class="heading">
                 <h1>registered user</h1>
@@ -44,7 +44,7 @@
             </div>
             <div class="box-container">
                 <?php
-                    $select_users = $conn->prepare("SELECT * FROM `user`");
+                    $select_users = $conn->prepare("SELECT * FROM `users`");
                     $select_users->execute();
 
                     if($select_users->rowCount() > 0){
@@ -52,7 +52,7 @@
                             $user_id = $fetch_users['id'];
                 ?>
                     <div class="box">
-                        <img src="../uploaded_files/<?= $fetch_users['image']; ?>" alt="user image">
+                        <img src="../uploaded_files/<?= $fetch_users['image']; ?>">
                         <p> user id : <span><?= $user_id; ?></span></p>
                         <p> user name : <span><?= $fetch_users['name']; ?></span></p>
                         <p> user email : <span><?= $fetch_users['email']; ?></span></p>
@@ -78,6 +78,6 @@
     <!-- custom js link -->
     <script src="../js/admin_script.js"></script>
 
-    <?php include '../componements/alert.php'; ?>
+    <?php include '../components/alert.php'; ?>
 </body>
 </html>

@@ -2,10 +2,12 @@
     include '../components/connect.php';
 
     if (isset($_COOKIE['seller_id'])) {
-        $seller_id = $_COOKIE['seller_id'];
+    $seller_id = $_COOKIE['seller_id'];
     } else {
         header('Location: login.php');
+        exit; 
     }
+
 
     $select_products = $conn->prepare("SELECT * FROM `products` WHERE seller_id = ?");
     $select_products->execute([$seller_id]);
@@ -56,7 +58,7 @@
                         <span><?= $total_orders; ?></span>
                         <p>total orders placed</p>
                         <a href="admin_orders.php" class="btn">view orders</a>
-                    </div>
+                    </div>   
                 </div>
             </div>
         </section>

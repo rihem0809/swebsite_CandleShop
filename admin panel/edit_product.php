@@ -127,7 +127,7 @@ if (isset($_POST['delete_image'])){
 <body>
     <div class="main-container">
         <?php include '../components/admin_header.php'; ?>
-        <section class="post-editor">
+        <section class="form-container">
             <div class="heading">
                 <h1>edit product</h1>
                 <img src="../images/separator-img.png">
@@ -141,7 +141,6 @@ if (isset($_POST['delete_image'])){
                 if ($select_product->rowCount() > 0) {
                     while ($fetch_product = $select_product->fetch(PDO::FETCH_ASSOC)) {
                 ?>
-                <div class="form-container">
                     <form action="" method="post" enctype="multipart/form-data" class="register">
                         <input type="hidden" name="old_image" value="<?= $fetch_product['image']; ?>">
                         <input type="hidden" name="product_id" value="<?= $fetch_product['id']; ?>">
@@ -194,7 +193,6 @@ if (isset($_POST['delete_image'])){
                                                        
                         </div>
                     </form>
-                </div>
                 <?php 
                         }
                     } else {
