@@ -1,19 +1,108 @@
-INSERT INTO `orders` (
-    `user_id`, `seller_id`, `name`, `number`, `email`, `address`, `address_type`,
-    `method`, `product_id`, `price`, `qty`, `date`, `status`, `payment_status`
-) VALUES (
-    '2',                     -- ID de l'utilisateur
-    '1',                     -- ID du vendeur
-    'Jean Dupont',           -- Nom du client
-    '0123456789',            -- Numéro de téléphone
-    'jean@example.com',      -- Email
-    '123 Rue de Paris, Lyon',-- Adresse
-    'domicile',              -- Type d'adresse
-    'carte bancaire',        -- Méthode de paiement
-    '5',                     -- ID du produit
-    '29.99',                 -- Prix unitaire
-    '2',                     -- Quantité
-    NOW(),                   -- Date actuelle
-    'en attente',            -- Statut de la commande
-    'non payé'               -- Statut de paiement
-);
+<?php
+include '../components/connect.php';
+include '../components/session.php';
+
+    $data = checkSellerSessionAndGetProfile($conn);
+    $seller_id = $data['seller_id'];
+    $fetch_profile = $data['profile'];
+
+if (isset($_POST['update_order'])){
+    $order_id = $_POST['order_id'];
+    $order_id = filter_var($order_id, FILTER_SANITIZE_STRING);
+
+    $update_payment = $_POST['update_payment'];
+    $update_payment = filter_var($update_payment, FILTER_SANITIZE_STRING);
+
+    $update_pay = $conn->prepare("UPDATE `orders` SET payment_status = ? WHERE id = ?");
+    $update_pay->execute([$update_payment, $order_id]);
+    $success_msg[] = 'Order payment status updated';
+}
+
+if (isset($_POST['delete_order'])) {
+    $delete_id = $_POST['order_id'];
+    $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
+
+    $verify_delete = $conn->prepare("SELECT * FROM `orders` WHERE id = ?");
+    $verify_delete->execute([$delete_id]);
+
+    if ($verify_delete->rowCount() > 0) {
+        $delete_order = $conn->prepare("DELETE FROM `orders` WHERE id = ?");
+        $delete_order->execute([$delete_id]);
+        $success_msg[] = 'Order deleted';
+    } else {
+        $warning_msg[] = 'Order already deleted';
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Candle Shop - Orders Page</title>
+    <link rel="stylesheet" type="text/css" href="../css/admin_style.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css">
+</head> 
+<body>
+    <div class="main-container">
+        <?php include '../components/admin_header.php'; ?>
+        <section class="order-container">
+            <div class="heading">
+                <h1>Total Orders Placed</h1>
+                <img src ="../images/separator-img.png">
+            </div>
+            <div class="box-container">
+                <?php 
+                $select_orders = $conn->prepare("SELECT * FROM `orders` WHERE seller_id = ?");
+                $select_orders->execute([$seller_id]);
+
+                if ($select_orders->rowCount() > 0) {
+                    while ($fetch_order = $select_orders->fetch(PDO::FETCH_ASSOC)) {
+                ?>
+                <div class="box">
+                    <div class="status" style="color: <?php echo ($fetch_order['status'] == 'in progress') ? 'limegreen' : 'red'; ?>">
+                        <?= $fetch_order['status']; ?>
+                    </div>
+                    <div class="details">
+                        <p>user name: <span><?= $fetch_order['name']; ?></span></p>
+                        <p>user id: <span><?= $fetch_order['user_id']; ?></span></p>
+                        <p>placed on: <span><?= $fetch_order['date']; ?></span></p>
+                        <p>user number: <span><?= $fetch_order['number']; ?></span></p>
+                        <p>user email: <span><?= $fetch_order['email']; ?></span></p>
+                        <p>total price: <span><?= $fetch_order['price']; ?></span></p>
+                        <p>payment method: <span><?= $fetch_order['method']; ?></span></p>
+                        <p>user address: <span><?= $fetch_order['address']; ?></span></p>
+                    </div>
+                    <form action="" method="post">
+                        <input type="hidden" name="order_id" value="<?= $fetch_order['id']; ?>">
+                        <select name="update_payment" class="box">
+                            <option disabled selected><?= $fetch_order['payment_status']; ?></option>
+                            <option value="pending">pending</option>
+                            <option value="order delivered">order delivered</option>
+                        </select>
+                        <div class="flex-btn">
+                            <input type="submit" name="update_order" value="update payment" class="btn">
+                            <input type="submit" name="delete_order" value="delete order" class="btn" onclick="return confirm('delete this order');">
+                        </div>
+                    </form>
+                </div>
+                <?php
+                    }
+                } else {
+                    echo '<div class="empty"><p>No order placed!</p></div>';
+                }
+                ?>
+            </div>
+        </section>
+    </div>
+
+    <!-- sweetalert cdn link -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <!-- custom js link -->
+    <script src="../js/admin_script.js"></script>
+
+    <?php include '../components/alert.php'; ?>
+</body>
+</html>

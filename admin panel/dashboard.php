@@ -1,12 +1,11 @@
 <?php
     include '../components/connect.php';
+    include '../components/session.php';
 
-    if (isset($_COOKIE['seller_id'])) {
-        $seller_id = $_COOKIE['seller_id'];
-    } else {
-        header('Location: login.php');
-        exit(); // Très important pour stopper l’exécution après redirection
-    }
+    $data = checkSellerSessionAndGetProfile($conn);
+    $seller_id = $data['seller_id'];
+    $fetch_profile = $data['profile'];
+
 ?>
 
 <!DOCTYPE html>

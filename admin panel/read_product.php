@@ -1,12 +1,10 @@
 <?php
     include '../components/connect.php';
+    include '../components/session.php';
 
-    if (isset($_COOKIE['seller_id'])) {
-        $seller_id = $_COOKIE['seller_id'];
-    } else {
-        $seller_id = '';
-        header('location: login.php');
-    }
+    $data = checkSellerSessionAndGetProfile($conn);
+    $seller_id = $data['seller_id'];
+    $fetch_profile = $data['profile'];
 
     $get_id = $_GET['post_id'];
 

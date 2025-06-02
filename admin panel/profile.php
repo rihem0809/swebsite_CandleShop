@@ -1,12 +1,10 @@
 <?php
     include '../components/connect.php';
+    include '../components/session.php';
 
-    if (isset($_COOKIE['seller_id'])) {
-    $seller_id = $_COOKIE['seller_id'];
-    } else {
-        header('Location: login.php');
-        exit; 
-    }
+    $data = checkSellerSessionAndGetProfile($conn);
+    $seller_id = $data['seller_id'];
+    $fetch_profile = $data['profile'];
 
 
     $select_products = $conn->prepare("SELECT * FROM `products` WHERE seller_id = ?");

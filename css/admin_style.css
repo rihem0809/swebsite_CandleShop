@@ -11,7 +11,7 @@
 /*-------------variables------*/
 :root{
   --space: 2rem;
-  --main-color: #da6285;
+  --main-color: #872ca0;
   --pink-color: #ff8e9d;
   --pink-opacity: #ffe6e9;
   --white-alpha-40: rgba(255,255,255,0.40);
@@ -22,7 +22,8 @@
 
 /*-------------global styling------*/
 body {
-  background-image: url('../images/bg1.png');
+  color: #872ca0;
+  background-color: #F4F8EE;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%; 
@@ -181,7 +182,7 @@ section,
   display: flex;
   align-items: center;
   justify-content: center;
-  
+  flex-direction: column;
   min-height: 100vh;
   padding: 4% 0;
   position: relative;
@@ -327,7 +328,7 @@ header .right {
 .toggle-btn{
     font-size: 2rem;
     padding: .5rem;
-    color: var(--pink-color);
+    color: #872ca0;
     cursor: pointer;
     transition: .6s;
 }

@@ -1,12 +1,10 @@
 <?php
     include '../components/connect.php';
+    include '../components/session.php';
 
-    if(isset($_COOKIE['seller_id'])){
-        $seller_id = $_COOKIE['seller_id'];
-    } else {
-        $seller_id = '';
-        header('location:login.php');
-    }
+    $data = checkSellerSessionAndGetProfile($conn);
+    $seller_id = $data['seller_id'];
+    $fetch_profile = $data['profile'];
 
     //add product in database
     if(isset($_POST['publish'])){
@@ -108,11 +106,13 @@
 <body>
     <div class="main-container">
         <?php include '../components/admin_header.php'; ?>
+        
         <section class="form-container">
             <div class="heading">
                 <h1>add product</h1>
                 <img src="../images/separator-img.png">
             </div>
+            <div class="box-container">
                 <form action="" method="post" enctype="multipart/form-data" class="register">
                     <div class="input-field">
                         <p>product name <span>*</span></p>
@@ -138,6 +138,7 @@
                         <input type="submit" name="publish" value="add product" class="btn"> 
                         <input type="submit" name="draft" value="save as draft" class="btn"> 
                     </div>
+                </div>
                 </form>
             
         </section>
