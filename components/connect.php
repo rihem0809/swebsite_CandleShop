@@ -1,15 +1,17 @@
 <?php
-    $db_name = 'mysql:host=localhost;port=3307;dbname=candle_db'; 
-    $username = 'root'; 
-    $password = ''; 
+$db_name = 'mysql:host=localhost;port=3307;dbname=candle_db'; 
+$username = 'root'; 
+$password = ''; 
 
+try {
     $conn = new PDO($db_name, $username, $password);
+    // echo "Connected successfully"; // optionnel
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
 
-    if(!$conn){
-        echo "not connected";
-    }
-
-    function unique_id(){
+if (!function_exists('unique_id')) {
+    function unique_id() {
         $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charLength = strlen($chars);
         $randomString = '';
@@ -18,4 +20,6 @@
         }
         return $randomString;
     }
+}
 ?>
+

@@ -1,6 +1,6 @@
 <header>
     <div class="logo">
-        <img src="../uploaded_files/logo.png" width="150" alt="Logo">
+        <img src="../images/logo_head.png" width="150" alt="Logo">
     </div>
     <div class="right">
         <div class="bx bxs-user" id="user-btn"></div>
